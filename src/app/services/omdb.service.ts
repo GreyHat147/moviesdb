@@ -13,7 +13,7 @@ export class OmdbService {
 
   getShows(keyword: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      const url = `${this.OMDB_URL}/?s=${keyword}&type=series&page=8&apikey=${this.API_KEY}`;
+      const url = `${this.OMDB_URL}/?s=${keyword}&type=movie&apikey=${this.API_KEY}`;
       this.http.get(url)
       .toPromise()
       .then((response: any) => {

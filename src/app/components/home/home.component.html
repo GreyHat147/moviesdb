@@ -14,7 +14,7 @@
           </span>
         </div>
       </div>
-      <div class="col-md-8 offset-md-2" *ngIf="isSearching" (keypress)="searchShow()">
+      <div class="col-md-8 offset-md-2" *ngIf="isSearching" (keyup)="searchShow()" (keyup.delete)="searchShow()">
         <div class="searchShows">
           <input type="text" [(ngModel)]="keyword" class="form-control" id="exampleFormControlInput1" placeholder="Busca peliculas o series...">
         </div>
@@ -31,13 +31,33 @@
           </div>
       </div>
     </div>
+    <br>
+    <div class="row" *ngIf="noResults">
+      <div class="col-md-8 offset-md-2">
+        <div class="alert alert-info" role="alert">
+          No se han encontrado resultados
+        </div>
+      </div>
+    </div>
     <div class="row" *ngIf="!loading">
       <div class="col-md-4" *ngFor="let show of shows">
-        <div class="card" style="width: 100%; height: 330px; margin: 30px 0">
-          <img class="show-card card-img-top" [src]="show.Poster" alt="Card image cap">
-          <div class="card-body">
-            <p class="card-text">{{ show.Title }}</p>
-          </div>
+        <div class="card" style="width: 100%; height: 300px; margin: 30px 0" 
+            (dblclick)="goToShow(show.imdbID)"
+            (mouseover)="onMouseOver()">
+          <popover-content *ngIf="onMouseOver" #myPopover 
+                title="Popover title" 
+                placement="right"
+                [animation]="true" 
+                [closeOnClickOutside]="true" >
+                <b>Very</b> <span style="color: #C21F39">Dynamic</span> <span style="color: #00b3ee">Reusable</span>
+                <b><i><span style="color: #ffc520">Popover With</span></i></b> <small>Html support</small>.
+          </popover-content>
+          <div [popover]="myPopover">
+              <img class="show-card card-img-top" [src]="(show.Poster != 'N/A') ? show.Poster : 'assets/images/noimage.svg'" alt="Card image cap">
+              <div class="card-body">
+                <p class="card-text title-show">{{ show.Title | slice:0:25 }} ... </p>
+              </div>
+          </div>  
         </div>
       </div>
     </div>

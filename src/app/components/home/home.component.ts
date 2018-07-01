@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OmdbService } from '../../services/omdb.service';
 import { error } from 'util';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,8 @@ export class HomeComponent implements OnInit {
   keyword: string;
   shows: any[];
   loading: boolean;
-  constructor(public _omdb: OmdbService) {
+  noResults: boolean;
+  constructor(public _omdb: OmdbService, private router: Router) {
     this.isSearching = false;
   }
 
@@ -27,7 +29,8 @@ export class HomeComponent implements OnInit {
       .then((data) => {
         this.shows = data;
         this.loading = false;
-        console.log(data)
+        this.noResults = (this.shows.length > 0) ? false: true;
+        console.log('foundSHow', this.noResults)
       })
       .catch((error) => {
         this.loading = false;
@@ -40,5 +43,13 @@ export class HomeComponent implements OnInit {
     console.log("scrolling");
   }
 
+  goToShow(id): void {
+    console.log("id", id )
+    this.router.navigate(['show/'+id]);
+  }
+
+  onMouseOver(): void {
+    console.log("mouseover");
+  }
 
 }
