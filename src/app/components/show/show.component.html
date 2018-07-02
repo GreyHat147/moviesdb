@@ -1,3 +1,40 @@
-<p>
-  show works!
-</p>
+<div class="container main">
+  <div class="row" style="margin-bottom: 50px">
+    <div class="col-md-2">
+      <a routerLink="" class="btn btn-info btn-block">Volver</a>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-4">
+        <div class="card card-detail-show">
+            <img class="show-card card-img-top" [src]="(show.Poster != 'N/A') ? show.Poster : 'assets/images/noimage.svg'" alt="Card image cap">
+            <div class="card-body">
+              <p class="card-text title-show">{{ show.Title }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!show.seasons" class="col-md-6 offset-md-1">
+      <h3>Descripción</h3>
+      <i style="margin-top: 15px">
+        {{ show.Plot }}
+      </i>
+    </div>
+    <div *ngIf="show.seasons && show.seasons.length > 0" class="col-md-6 offset-md-1">
+      <h3>Seasons</h3>
+      <div>
+        <button *ngFor="let season of show.arrSeasons" #mybutton ngClass="" class="button-season" (click)="setSeason(season)">{{ season }}</button>
+      </div>
+      <div class="list-episodes">
+          <table class="table">
+              <tbody>
+                <tr *ngFor="let episode of episodes">
+                  <th scope="row">{{ episode.Episode }}</th>
+                  <td>{{ episode.Title }}</td>
+                </tr>
+            </table>
+      </div>
+    </div>
+  </div>
+</div>

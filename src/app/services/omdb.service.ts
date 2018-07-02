@@ -13,7 +13,7 @@ export class OmdbService {
 
   getShows(keyword: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      const url = `${this.OMDB_URL}/?s=${keyword}&type=movie&apikey=${this.API_KEY}`;
+      const url = `${this.OMDB_URL}/?s=${keyword}&apikey=${this.API_KEY}`;
       this.http.get(url)
       .toPromise()
       .then((response: any) => {
@@ -23,7 +23,6 @@ export class OmdbService {
           resolve(shows);
       })
       .catch((error) => reject(error));
-
     });
   }
 
@@ -57,6 +56,17 @@ export class OmdbService {
         })
         .catch((error) => reject(error));
     });
+  }
 
+  getSeasonsByShow(id: string, season: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const url = `${this.OMDB_URL}/?i=${id}&Season=${season}&apikey=${this.API_KEY}`;
+      this.http.get(url)
+      .toPromise()
+      .then((response: any) => {
+          resolve(response);
+      })
+      .catch((error) => reject(error));
+    });
   }
 }

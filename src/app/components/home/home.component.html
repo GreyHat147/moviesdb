@@ -1,10 +1,4 @@
-<div class="search-results"
-  infiniteScroll
-  [infiniteScrollDistance]="2"
-  [infiniteScrollUpDistance]="1.5"
-  [infiniteScrollThrottle]="150"
-  (scrolled)="onScrollDown()">
-  
+<div>
   <div class="container main">
     <div class="row">
       <div class="col-md-8 offset-md-2">
@@ -32,36 +26,56 @@
       </div>
     </div>
     <br>
-    <div class="row" *ngIf="noResults">
+    <div class="row" *ngIf="noResults && !loading">
       <div class="col-md-8 offset-md-2">
         <div class="alert alert-info" role="alert">
           No se han encontrado resultados
         </div>
       </div>
     </div>
-    <div class="row" *ngIf="!loading">
-      <div class="col-md-4" *ngFor="let show of shows">
-        <div class="card" style="width: 100%; height: 300px; margin: 30px 0" 
-            (dblclick)="goToShow(show.imdbID)"
-            (mouseover)="onMouseOver()">
-          <popover-content *ngIf="onMouseOver" #myPopover 
-                title="Popover title" 
-                placement="right"
-                [animation]="true" 
-                [closeOnClickOutside]="true" >
-                <b>Very</b> <span style="color: #C21F39">Dynamic</span> <span style="color: #00b3ee">Reusable</span>
-                <b><i><span style="color: #ffc520">Popover With</span></i></b> <small>Html support</small>.
-          </popover-content>
-          <div [popover]="myPopover">
-              <img class="show-card card-img-top" [src]="(show.Poster != 'N/A') ? show.Poster : 'assets/images/noimage.svg'" alt="Card image cap">
-              <div class="card-body">
-                <p class="card-text title-show">{{ show.Title | slice:0:25 }} ... </p>
-              </div>
-          </div>  
+    <div
+    class="search-results"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollUpDistance]="1.5"
+    [infiniteScrollThrottle]="150"
+    (scrolled)="onScrollDown()">
+      <div class="row" *ngIf="!loading">
+        <div class="col-md-4" *ngFor="let show of shows | slice:0:9">
+          <div class="card" style="width: 100%; height: 300px; margin: 30px 0" 
+              (dblclick)="goToShow(show.imdbID)"
+              (mouseover)="showPopover()"
+              (mouseleave)="hidePopover()">
+            <popover-content #myPopover 
+                  title="Popover title" 
+                  placement="right"
+                  [animation]="true" 
+                  [closeOnClickOutside]="true" >
+                  <b>Very</b> <span style="color: #C21F39">Dynamic</span> <span style="color: #00b3ee">Reusable</span>
+                  <b><i><span style="color: #ffc520">Popover With</span></i></b> <small>Html support</small>.
+            </popover-content>
+            <div [popover]="myPopover">
+                <img class="show-card card-img-top" [src]="(show.Poster != 'N/A') ? show.Poster : 'assets/images/noimage.svg'" alt="Card image cap">
+                <div class="card-body">
+                  <p class="card-text title-show">{{ show.Title | slice:0:25 }} ... </p>
+                </div>
+            </div>  
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<!-- 
+<popover-content #myPopover 
+                title="Popover title" 
+                placement="right"
+                [animation]="true" 
+                [closeOnClickOutside]="true" >
+    <b>Very</b> <span style="color: #C21F39">Dynamic</span> <span style="color: #00b3ee">Reusable</span>
+    <b><i><span style="color: #ffc520">Popover With</span></i></b> <small>Html support</small>.
+</popover-content>
+
+<button [popover]="myPopover" (click)="test(myPopover)">element on which this popover is applied.</button> -->
 
 
