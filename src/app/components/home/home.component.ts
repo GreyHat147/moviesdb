@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { OmdbService } from '../../services/omdb.service';
 import { error, log } from 'util';
 import { Router } from '@angular/router';
+declare var $ :any;
 
 @Component({
   selector: 'app-home',
@@ -16,29 +17,37 @@ export class HomeComponent implements OnInit {
   loading: boolean;
   noResults: boolean;
   scrolled: boolean;
+  invalidKeyword: boolean;
+  errorProccesed: boolean = false;
+  showPop: boolean = false;
   constructor(public _omdb: OmdbService, private router: Router) {
     this.isSearching = false;
+    // $(function () {
+    //   $('[data-toggle="tooltip"]').tooltip()
+    // })
   }
 
   ngOnInit() {
   }
 
   searchShow():void {
-    if (this.keyword) {
+    this.invalidKeyword = this.validateKeyWord();
+    if (this.keyword && !this.invalidKeyword) {
+      this.errorProccesed = false;
       this.loading = true;
-      // console.log(this.keyword);
       this._omdb.getShows(this.keyword)
       .then((data) => {
-        this.shows = data;
-        console.log(this.shows)
         this.loading = false;
+        this.shows = data;
         this.noResults = (this.shows.length > 0) ? false: true;
-        // console.log('foundSHow', this.noResults)
       })
       .catch((error) => {
+        this.shows = [];
         this.loading = false;
-        console.error(error);
+        this.errorProccesed = true;
       });
+    } else {
+      this.shows = [];
     }
   }
 
@@ -47,25 +56,37 @@ export class HomeComponent implements OnInit {
   }
 
   goToShow(id): void {
-    console.log("id", id )
     this.router.navigate(['show/'+id]);
   }
 
   onMouseOver(): void {
     if (this.shows.length > 9) {
-      console.log("mouseover");
       this.scrolled = true;
     }
   }
 
-  showPopover(): void {
-    this.popover.isIn = true;
-    this.popover.displayType = "block";
+  showPopover(actors: any, rating: any, index: any): void {
+    this.shows[index].showPopover = true;
+    $('#popover-dismiss').popover({
+      trigger: 'hover',
+      content: 'Actors: ' + actors,
+      placement: 'top',
+      animation: true,
+      title: 'Ratings ' + rating
+    })
+    $('#popover-dismiss').popover('update')
+    $('#popover-dismiss').popover('show');
   }
 
-  hidePopover(): void {
-    this.popover.isIn = false;
-    this.popover.element.nativeElement.hidden = true;
+
+  hidePopover(index): void {
+    this.shows[index].showPopover = true;
+    $('#popover-dismiss').popover('hide');
+  }
+
+  validateKeyWord(): boolean {
+    const regExp = /@|#/g;
+    return regExp.test(this.keyword);
   }
 
 }

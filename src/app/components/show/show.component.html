@@ -5,8 +5,15 @@
     </div>
   </div>
   <hr>
-  <div class="row">
-    <div class="col-md-4">
+  <div class="row" *ngIf="errorProccesed">
+      <div class="col-md-8 offset-md-2">
+        <div class="alert alert-danger" role="alert">
+          A ocurrido al cargar el show
+        </div>
+      </div>
+    </div>
+  <div class="row" style="margin-bottom: 45px">
+    <div class="col-md-4" *ngIf="show.Poster">
         <div class="card card-detail-show">
             <img class="show-card card-img-top" [src]="(show.Poster != 'N/A') ? show.Poster : 'assets/images/noimage.svg'" alt="Card image cap">
             <div class="card-body">
@@ -14,7 +21,6 @@
             </div>
         </div>
     </div>
-
     <div *ngIf="!show.seasons" class="col-md-6 offset-md-1">
       <h3>Descripción</h3>
       <i style="margin-top: 15px">
@@ -24,7 +30,9 @@
     <div *ngIf="show.seasons && show.seasons.length > 0" class="col-md-6 offset-md-1">
       <h3>Seasons</h3>
       <div>
-        <button *ngFor="let season of show.arrSeasons" #mybutton ngClass="" class="button-season" (click)="setSeason(season)">{{ season }}</button>
+        <button *ngFor="let season of show.arrSeasons; let i = index" #mybutton [ngClass]=" show.selected  ? 'button-season-selected' : 'button-season'" (click)="setSeason(season.i, i)">
+          {{ season.i }}
+        </button>
       </div>
       <div class="list-episodes">
           <table class="table">

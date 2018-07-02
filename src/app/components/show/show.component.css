@@ -31,9 +31,14 @@
     border: 1px solid lightgray;
     margin: 0px 8px;
     cursor: pointer;
+    box-shadow: 5px 4px 2px lightgrey;
 }
 
-.button-season:link {
+.button-season:focus {
+    border: none; 
+}
+
+.button-season-selected {
     background: aliceblue;
     border: 1px solid darkgrey;
     padding: 15px;
@@ -41,6 +46,7 @@
     border: 1px solid lightgray;
     margin: 0px 8px;
     cursor: pointer;
+    box-shadow: 5px 4px 2px lightcyan;
 }
 
 .list-episodes {

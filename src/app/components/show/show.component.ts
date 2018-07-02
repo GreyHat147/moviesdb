@@ -9,8 +9,10 @@ import { OmdbService } from '../../services/omdb.service';
 })
 export class ShowComponent implements OnInit {
   idShow: string;
-  show: any;
+  public show: any;
   episodes: any[];
+  noSeleted: boolean: false;
+  errorProccesed: boolean = false;
   constructor(public _omdb: OmdbService, 
               private acivatedRoute: ActivatedRoute,
               private router: Router) { 
@@ -33,29 +35,35 @@ export class ShowComponent implements OnInit {
     const arrSeasons = [];
     this._omdb.getShowById(id)
     .then((show) => {
-      this.show = show;
-      const arrayProm = [];
-      for (let index = 1; index <= Number(show.totalSeasons); index++) {
-        arrayProm.push(this._omdb.getSeasonsByShow(id, index));
-        arrSeasons.push(index);
+      if (show.Response == "True") {
+        this.show = show;
+        const arrayProm = [];
+        for (let index = 1; index <= Number(show.totalSeasons); index++) {
+          arrayProm.push(this._omdb.getSeasonsByShow(id, index));
+          arrSeasons.push({i: index, selected: false});
+        }
+        return Promise.all(arrayProm);
       }
-      return Promise.all(arrayProm);
+      return Promise.resolve(null);
     })
     .then((seasons) => {
-        this.show.seasons = seasons;
-        this.show.arrSeasons = arrSeasons;
-        this.episodes = seasons[0].Episodes;
-        console.log("seasons", this.show)
+        if (seasons) {
+          this.show.seasons = (seasons) ? seasons : [];
+          this.show.arrSeasons = arrSeasons;
+          this.episodes = (seasons && seasons[0]) ? seasons[0].Episodes : [];
+        } else {
+          this.errorProccesed = true;
+        }
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(() => {
+      this.errorProccesed = true;
     });
   }
 
-  setSeason(numSeason: number) {
+  setSeason(numSeason: number, index: any) {
+    this.show.arrSeasons[index].selected = true;
     this.show.seasons.forEach((season) => {
       if (season.Season == numSeason.toString() ) {
-        console.log("episodes")
         this.episodes = season.Episodes;
       }
     });

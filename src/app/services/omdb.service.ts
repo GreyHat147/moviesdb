@@ -46,7 +46,7 @@ export class OmdbService {
           shows.forEach((show, index) => {
               arrayProm.push(this.getShowById(show.imdbID)
               .then((dataShow) => {
-                  newShows.push({...show, actors: dataShow.Actors, ratings: dataShow.Ratings });
+                  newShows.push({...show, actors: dataShow.Actors, ratings: dataShow.Ratings, showPopover: false });
               }))
           }); 
         }
