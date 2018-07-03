@@ -11,7 +11,7 @@ export class ShowComponent implements OnInit {
   idShow: string;
   public show: any;
   episodes: any[];
-  noSeleted: boolean: false;
+  noSeleted: boolean = false;
   errorProccesed: boolean = false;
   constructor(public _omdb: OmdbService, 
               private acivatedRoute: ActivatedRoute,
